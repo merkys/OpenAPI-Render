@@ -5,7 +5,10 @@ use warnings;
 
 require Exporter;
 our @ISA = qw( Exporter );
-our @EXPORT_OK = qw( dereference );
+our @EXPORT_OK = qw(
+    dereference
+    RequestBody2Parameters
+);
 
 sub dereference
 {
@@ -27,6 +30,24 @@ sub dereference
         }
     }
     return $node;
+}
+
+sub RequestBody2Parameters
+{
+    my( $requestBody ) = @_;
+
+    return if !exists $requestBody->{content} ||
+              !exists $requestBody->{content}{'multipart/form-data'} ||
+              !exists $requestBody->{content}{'multipart/form-data'}{schema};
+
+    my $schema = $requestBody->{content}{'multipart/form-data'}{schema};
+
+    return if $schema->{type} ne 'object';
+    return map { {
+                    in     => 'query',
+                    name   => $_,
+                    schema => $schema->{properties}{$_} } }
+               sort keys %{$schema->{properties}};
 }
 
 1;

@@ -5,7 +5,7 @@ use warnings;
 
 use CGI qw(:standard -nosticky -utf8 start_div end_div);
 use JSON;
-use OpenAPI::View qw(dereference);
+use OpenAPI::View qw(dereference RequestBody2Parameters);
 
 my $filename = shift @ARGV;
 
@@ -48,7 +48,10 @@ for my $path (sort keys %{$api->{paths}}) {
             exists $api->{paths}{$path}{parameters}
                ? @{$api->{paths}{$path}{parameters}} : (),
             exists $api->{paths}{$path}{$operation}{parameters}
-               ? @{$api->{paths}{$path}{$operation}{parameters}} : () );
+               ? @{$api->{paths}{$path}{$operation}{parameters}} : (),
+            exists $api->{paths}{$path}{$operation}{requestBody}
+               ? RequestBody2Parameters( $api->{paths}{$path}{$operation}{requestBody} ) : (),
+            );
         my @fields;
         for my $parameter (@parameters) {
             push @fields,
