@@ -75,6 +75,15 @@ for my $path (sort keys %{$api->{paths}}) {
                                 : ()) } );
             }
         }
+        my %submit_options;
+        if( $operation eq 'get' || $operation eq 'post' ) {
+            $submit_options{-onclick} = 'replace_url_parameters( this.form )';
+        } else {
+            $submit_options{-name} =
+                sprintf 'Submit Query (cannot be handled for %s)',
+                        uc $operation;
+            $submit_options{-disabled} = 'disabled';
+        }
         print start_form( -action => $base_url . $path,
                           -method => $operation ),
               fieldset(
@@ -82,7 +91,7 @@ for my $path (sort keys %{$api->{paths}}) {
                         ( $api->{paths}{$path}{$operation}{description}
                              ? ': ' . $api->{paths}{$path}{$operation}{description} : '' ) ),
                 @fields,
-                submit( -onclick => 'replace_url_parameters( this.form )' ) ),
+                submit( %submit_options ) ),
               end_form;
     }
 }
