@@ -19,7 +19,24 @@ print header( -type => 'text/html',
               -expires => 'now',
               -charset => 'UTF-8' ),
       start_html( -title => $api->{info}{title} . ' v' .
-                            $api->{info}{version} );
+                            $api->{info}{version},
+                  -script =>
+'
+
+function replace_url_parameters( form ) {
+    var url = form.getAttribute( "action" );
+    var inputs = form.getElementsByTagName( "input" );
+    for( var i = 0; i < inputs.length; i++ ) {
+        var data_in_path = inputs[i].getAttribute( "data-in-path" );
+        if( data_in_path ) {
+            url = url.replace( "{" + inputs[i].name + "}", inputs[i].value );
+            inputs[i].value = null;
+        }
+    }
+    form.setAttribute( "action", url );
+}
+
+'               );
 
 my( $base_url ) = map { $_->{url} } @{$api->{servers} };
 
@@ -53,7 +70,7 @@ for my $path (sort keys %{$api->{paths}}) {
                         ( $api->{paths}{$path}{$operation}{description}
                              ? ': ' . $api->{paths}{$path}{$operation}{description} : '' ) ),
                 @fields,
-                submit ),
+                submit( -onclick => 'replace_url_parameters( this.form )' ) ),
               end_form;
     }
 }
