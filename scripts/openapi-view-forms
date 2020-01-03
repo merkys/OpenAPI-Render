@@ -51,7 +51,6 @@ for my $path (sort keys %{$api->{paths}}) {
                ? @{$api->{paths}{$path}{$operation}{parameters}} : () );
         my @fields;
         for my $parameter (@parameters) {
-            next if $parameter->{'$ref'}; # Will have to dereference later
             push @fields,
                  h3( $parameter->{name} ),
                  $parameter->{description} ? p( $parameter->{description} ) : (),
