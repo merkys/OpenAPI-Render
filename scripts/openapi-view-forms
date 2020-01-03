@@ -32,9 +32,13 @@ for my $path (sort keys %{$api->{paths}}) {
                           -method => $operation );
         for my $parameter (@{$api->{paths}{$path}{$operation}{parameters}}) {
             next if $parameter->{'$ref'}; # Will have to dereference later
-            print span( $parameter->{name} ),
+            print h3( $parameter->{name} ),
+                  $parameter->{description} ? p( $parameter->{description} ) : (),
                   input( { -type => 'text',
-                           -name => $parameter->{name} } );
+                           -name => $parameter->{name},
+                           (exists $parameter->{example}
+                                ? ( -placeholder => $parameter->{example} )
+                                : ()) } );
         }
         print end_form;
     }
