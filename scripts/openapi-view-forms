@@ -53,14 +53,27 @@ for my $path (sort keys %{$api->{paths}}) {
         for my $parameter (@parameters) {
             push @fields,
                  h3( $parameter->{name} ),
-                 $parameter->{description} ? p( $parameter->{description} ) : (),
-                 input( { -type => 'text',
-                          -name => $parameter->{name},
-                          ($parameter->{in} eq 'path'
-                            ? ( '-data-in-path' => 1 ) : ()),
-                          (exists $parameter->{example}
-                            ? ( -placeholder => $parameter->{example} )
-                            : ()) } );
+                 $parameter->{description} ? p( $parameter->{description} ) : ();
+            if( $parameter->{schema} && $parameter->{schema}{enum} ) {
+                my @values = @{$parameter->{schema}{enum}};
+                if( !$parameter->{required} ) {
+                    unshift @values, '';
+                }
+                push @fields,
+                     popup_menu( -name => $parameter->{name},
+                                 -values => \@values,
+                                 ($parameter->{in} eq 'path'
+                                    ? ( '-data-in-path' => 1 ) : ()) );
+            } else {
+                push @fields,
+                     input( { -type => 'text',
+                              -name => $parameter->{name},
+                              ($parameter->{in} eq 'path'
+                                ? ( '-data-in-path' => 1 ) : ()),
+                              (exists $parameter->{example}
+                                ? ( -placeholder => $parameter->{example} )
+                                : ()) } );
+            }
         }
         print start_form( -action => $base_url . $path,
                           -method => $operation ),
