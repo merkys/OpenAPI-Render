@@ -25,8 +25,13 @@ for my $path (sort keys %{$api->{paths}}) {
     print h1( $path );
     for my $operation ('get', 'post', 'patch', 'put', 'delete') {
         next if !$api->{paths}{$path}{$operation};
+        my @parameters = (
+            exists $api->{paths}{$path}{parameters}
+               ? @{$api->{paths}{$path}{parameters}} : (),
+            exists $api->{paths}{$path}{$operation}{parameters}
+               ? @{$api->{paths}{$path}{$operation}{parameters}} : () );
         my @fields;
-        for my $parameter (@{$api->{paths}{$path}{$operation}{parameters}}) {
+        for my $parameter (@parameters) {
             next if $parameter->{'$ref'}; # Will have to dereference later
             push @fields,
                  h3( $parameter->{name} ),
