@@ -5,12 +5,15 @@ use warnings;
 
 use CGI qw(:standard -nosticky -utf8 start_div end_div);
 use JSON;
+use OpenAPI::View qw(dereference);
 
 my $filename = shift @ARGV;
 
 open( my $inp, $filename );
 my $api = decode_json( join '', <$inp> );
 close $inp;
+
+$api = dereference( $api, $api );
 
 print header( -type => 'text/html',
               -expires => 'now',
