@@ -40,6 +40,8 @@ for my $path (sort keys %{$api->{paths}}) {
                  $parameter->{description} ? p( $parameter->{description} ) : (),
                  input( { -type => 'text',
                           -name => $parameter->{name},
+                          ($parameter->{in} eq 'path'
+                            ? ( '-data-in-path' => 1 ) : ()),
                           (exists $parameter->{example}
                             ? ( -placeholder => $parameter->{example} )
                             : ()) } );
