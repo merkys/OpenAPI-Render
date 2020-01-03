@@ -67,6 +67,12 @@ for my $path (sort keys %{$api->{paths}}) {
                                  -values => \@values,
                                  ($parameter->{in} eq 'path'
                                     ? ( '-data-in-path' => 1 ) : ()) );
+            } elsif( ($parameter->{schema}{type} &&
+                      $parameter->{schema}{type} eq 'object') ||
+                     ($parameter->{schema}{format} &&
+                      $parameter->{schema}{format} eq 'binary') ) {
+                push @fields,
+                     filefield( -name => $parameter->{name} );
             } else {
                 push @fields,
                      input( { -type => 'text',
