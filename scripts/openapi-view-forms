@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use CGI qw(:standard -nosticky -utf8 start_div end_div);
+use JSON;
+
+my $filename = shift @ARGV;
+
+open( my $inp, $filename );
+my $api = decode_json( join '', <$inp> );
+close $inp;
+
+print header( -type => 'text/html',
+              -expires => 'now',
+              -charset => 'UTF-8' ),
+      start_html( -title => $api->{info}{title} ),
+      end_html,
+      "\n";
