@@ -30,7 +30,7 @@ function replace_url_parameters( form ) {
         var data_in_path = inputs[i].getAttribute( "data-in-path" );
         if( data_in_path ) {
             url = url.replace( "{" + inputs[i].name + "}", inputs[i].value );
-            inputs[i].value = null;
+            inputs[i].disabled = "disabled";
         }
     }
     form.setAttribute( "action", url );
