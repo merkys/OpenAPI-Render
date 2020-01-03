@@ -21,6 +21,8 @@ print header( -type => 'text/html',
       start_html( -title => $api->{info}{title} . ' v' .
                             $api->{info}{version} );
 
+my( $base_url ) = map { $_->{url} } @{$api->{servers} };
+
 for my $path (sort keys %{$api->{paths}}) {
     print h1( $path );
     for my $operation ('get', 'post', 'patch', 'put', 'delete') {
@@ -42,7 +44,7 @@ for my $path (sort keys %{$api->{paths}}) {
                             ? ( -placeholder => $parameter->{example} )
                             : ()) } );
         }
-        print start_form( -action => $path,
+        print start_form( -action => $base_url . $path,
                           -method => $operation ),
               fieldset(
                 legend( uc( $operation ) .
