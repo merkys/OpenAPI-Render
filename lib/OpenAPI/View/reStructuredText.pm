@@ -35,64 +35,40 @@ sub parameters_header
 {
     my( $self ) = @_;
     $self->{table} = Text::ASCIITable->new;
-    $self->{table}->setCols( 'Type', 'Name', 'Description' );
+    $self->{table}->setOptions( 'drawRowLine', 1 );
+    $self->{table}->setCols( 'Type', 'Name', 'Description', 'Mandatory?', 'Format', 'Example' );
     return '';
 }
 
 sub parameter
 {
     my( $self, $parameter ) = @_;
+
     my $table = $self->{table};
-    $table->addRow( $parameter->{in}, $parameter->{name}, $parameter->{description} );
+    $table->addRow( $parameter->{in},
+                    $parameter->{name},
+                    $parameter->{description},
+                    $parameter->{required} ? 'yes' : 'no',
+                    $parameter->{schema}{type},
+                    $parameter->{example} );
     return '';
-    
-    #~ my @parameter;
-    #~ push @parameter,
-         #~ h3( $parameter->{name} ),
-         #~ $parameter->{description} ? p( $parameter->{description} ) : ();
-    #~ if( $parameter->{schema} && $parameter->{schema}{enum} ) {
-        #~ my @values = @{$parameter->{schema}{enum}};
-        #~ if( !$parameter->{required} ) {
-            #~ unshift @values, '';
-        #~ }
-        #~ push @parameter,
-             #~ popup_menu( -name => $parameter->{name},
-                         #~ -values => \@values,
-                         #~ ($parameter->{in} eq 'path'
-                            #~ ? ( '-data-in-path' => 1 ) : ()) );
-    #~ } elsif( ($parameter->{schema}{type} &&
-              #~ $parameter->{schema}{type} eq 'object') ||
-             #~ ($parameter->{schema}{format} &&
-              #~ $parameter->{schema}{format} eq 'binary') ) {
-        #~ push @parameter,
-             #~ filefield( -name => $parameter->{name} );
-    #~ } else {
-        #~ push @parameter,
-             #~ input( { -type => 'text',
-                      #~ -name => $parameter->{name},
-                      #~ ($parameter->{in} eq 'path'
-                        #~ ? ( '-data-in-path' => 1 ) : ()),
-                      #~ (exists $parameter->{example}
-                        #~ ? ( -placeholder => $parameter->{example} )
-                        #~ : ()) } );
-    #~ }
-    #~ return @parameter;
 }
 
 sub parameters_footer
 {
     my( $self ) = @_;
-    return $self->{table}->draw( [ '+', '+', '-', '-' ],
+    return $self->{table}->draw( [ '+', '+', '-', '+' ],
                                  [ '|', '|', '|' ],
-                                 [ '+', '+', '=', '=' ],
+                                 [ '+', '+', '=', '+' ],
                                  [ '|', '|', '|' ],
-                                 [ '+', '+', '-', '-' ] ) . "\n";
+                                 [ '+', '+', '-', '+' ] ) . "\n";
 }
 
 sub responses_header
 {
     my( $self ) = @_;
     $self->{table} = Text::ASCIITable->new;
+    $self->{table}->setOptions( 'drawRowLine', 1 );
     $self->{table}->setCols( 'HTTP code', 'Description' );
     return '';
 }
