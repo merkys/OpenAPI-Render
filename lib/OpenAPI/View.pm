@@ -52,12 +52,12 @@ sub show
     return $html;
 }
 
-sub header {}
-sub footer {}
-sub path_header {}
-sub operation_header {}
-sub operation_footer {}
-sub parameter {}
+sub header { return '' }
+sub footer { return '' }
+sub path_header { return '' }
+sub operation_header { return '' }
+sub operation_footer { return '' }
+sub parameter { return '' }
 
 sub dereference
 {
