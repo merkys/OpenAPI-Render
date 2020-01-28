@@ -31,18 +31,22 @@ sub operation_header
                '+' );
 }
 
+sub parameters_header
+{
+    my( $self ) = @_;
+    $self->{table} = Text::ASCIITable->new;
+    $self->{table}->setCols( 'Type', 'Name', 'Description' );
+    return '';
+}
+
 sub parameter
 {
     my( $self, $parameter ) = @_;
 
-    my $table = Text::ASCIITable->new;
-    $table->setCols( 'Type', 'Name', 'Description' );
+    my $table = $self->{table};
     $table->addRow( $parameter->{in}, $parameter->{name}, $parameter->{description} );
-    return $table->draw( [ '+', '+', '-', '-' ],
-                         [ '|', '|', '|' ],
-                         [ '+', '+', '=', '=' ],
-                         [ '|', '|', '|' ],
-                         [ '+', '+', '-', '-' ] ) . "\n";
+    return '';
+    
     #~ my @parameter;
     #~ push @parameter,
          #~ h3( $parameter->{name} ),
@@ -74,6 +78,16 @@ sub parameter
                         #~ : ()) } );
     #~ }
     #~ return @parameter;
+}
+
+sub parameters_footer
+{
+    my( $self ) = @_;
+    return $self->{table}->draw( [ '+', '+', '-', '-' ],
+                                 [ '|', '|', '|' ],
+                                 [ '+', '+', '=', '=' ],
+                                 [ '|', '|', '|' ],
+                                 [ '+', '+', '-', '-' ] ) . "\n";
 }
 
 sub _h

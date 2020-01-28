@@ -43,7 +43,9 @@ sub show
                 exists $api->{paths}{$path}{$operation}{requestBody}
                    ? RequestBody2Parameters( $api->{paths}{$path}{$operation}{requestBody} ) : (),
                 );
+            $html .= $self->parameters_header;
             $html .= join '', map { $self->parameter( $_ ) } @parameters;
+            $html .= $self->parameters_footer;
             $html .= $self->operation_footer( $path, $operation );
         }
     }
@@ -57,7 +59,10 @@ sub footer { return '' }
 sub path_header { return '' }
 sub operation_header { return '' }
 sub operation_footer { return '' }
+
+sub parameters_header { return '' };
 sub parameter { return '' }
+sub parameters_footer { return '' };
 
 sub dereference
 {
