@@ -34,7 +34,6 @@ sub show
         $html .= $self->path_header( $path );
         for my $operation ('get', 'post', 'patch', 'put', 'delete') {
             next if !$api->{paths}{$path}{$operation};
-            $html .= $self->operation_header( $path, $operation );
             my @parameters = (
                 exists $api->{paths}{$path}{parameters}
                    ? @{$api->{paths}{$path}{parameters}} : (),
@@ -43,10 +42,20 @@ sub show
                 exists $api->{paths}{$path}{$operation}{requestBody}
                    ? RequestBody2Parameters( $api->{paths}{$path}{$operation}{requestBody} ) : (),
                 );
-            $html .= $self->parameters_header;
-            $html .= join '', map { $self->parameter( $_ ) } @parameters;
-            $html .= $self->parameters_footer;
-            $html .= $self->operation_footer( $path, $operation );
+            my $responses = $api->{paths}{$path}{$operation}{responses};
+
+            $html .= $self->operation_header( $path, $operation ) .
+
+                     $self->parameters_header .
+                     join( '', map { $self->parameter( $_ ) } @parameters ) .
+                     $self->parameters_footer .
+
+                     $self->responses_header .
+                     join( '', map { $self->response( $_, $responses->{$_} ) }
+                                   sort keys %$responses ) .
+                     $self->responses_footer .
+
+                     $self->operation_footer( $path, $operation );
         }
     }
 
@@ -58,11 +67,16 @@ sub header { return '' }
 sub footer { return '' }
 sub path_header { return '' }
 sub operation_header { return '' }
-sub operation_footer { return '' }
 
 sub parameters_header { return '' };
 sub parameter { return '' }
 sub parameters_footer { return '' };
+
+sub responses_header { return '' };
+sub response { return '' };
+sub responses_footer { return '' };
+
+sub operation_footer { return '' }
 
 sub dereference
 {

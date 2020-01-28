@@ -42,7 +42,6 @@ sub parameters_header
 sub parameter
 {
     my( $self, $parameter ) = @_;
-
     my $table = $self->{table};
     $table->addRow( $parameter->{in}, $parameter->{name}, $parameter->{description} );
     return '';
@@ -89,6 +88,24 @@ sub parameters_footer
                                  [ '|', '|', '|' ],
                                  [ '+', '+', '-', '-' ] ) . "\n";
 }
+
+sub responses_header
+{
+    my( $self ) = @_;
+    $self->{table} = Text::ASCIITable->new;
+    $self->{table}->setCols( 'HTTP code', 'Description' );
+    return '';
+}
+
+sub response
+{
+    my( $self, $code, $response ) = @_;
+    my $table = $self->{table};
+    $table->addRow( $code, $response->{description} );
+    return '';
+}
+
+sub responses_footer { &parameters_footer }
 
 sub _h
 {
