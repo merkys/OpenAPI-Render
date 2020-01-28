@@ -19,7 +19,26 @@ sub header
 sub path_header
 {
     my( $self, $path ) = @_;
-    return _h( $path, '-' );
+
+    my $text = _h( $path, '-' );
+    my @url_parameters;
+    if( $self->{api}{paths}{$path}{parameters} ) {
+        @url_parameters = grep { $_->{in} eq 'path' }
+                               @{$self->{api}{paths}{$path}{parameters}};
+    }
+    if( @url_parameters ) {
+        $text .= _h( 'URL parameters', '+' );
+        $self->_start_table( 'Name', 'Description', 'Format', 'Example' );
+        foreach (@url_parameters) {
+            $self->{table}->addRow( $_->{name},
+                                    $_->{description},
+                                    $_->{format},
+                                    $_->{example} );
+        }
+        $text .= $self->parameters_footer;
+    }
+
+    return $text;
 }
 
 sub operation_header
@@ -34,19 +53,17 @@ sub operation_header
 sub parameters_header
 {
     my( $self ) = @_;
-    $self->{table} = Text::ASCIITable->new;
-    $self->{table}->setOptions( 'drawRowLine', 1 );
-    $self->{table}->setCols( 'Type', 'Name', 'Description', 'Mandatory?', 'Format', 'Example' );
+    $self->_start_table( 'Name', 'Description', 'Mandatory?', 'Format', 'Example' );
     return '';
 }
 
 sub parameter
 {
     my( $self, $parameter ) = @_;
+    return '' if $parameter->{in} eq 'path'; # should be already handled
 
     my $table = $self->{table};
-    $table->addRow( $parameter->{in},
-                    $parameter->{name},
+    $table->addRow( $parameter->{name},
                     $parameter->{description},
                     $parameter->{required} ? 'yes' : 'no',
                     $parameter->{schema}{type},
@@ -67,9 +84,7 @@ sub parameters_footer
 sub responses_header
 {
     my( $self ) = @_;
-    $self->{table} = Text::ASCIITable->new;
-    $self->{table}->setOptions( 'drawRowLine', 1 );
-    $self->{table}->setCols( 'HTTP code', 'Description' );
+    $self->_start_table( 'HTTP code', 'Description' );
     return '';
 }
 
@@ -88,6 +103,14 @@ sub _h
     my( $text, $symbol ) = @_;
     $symbol = '-' unless $symbol;
     return $text . "\n" . ( $symbol x length $text ) . "\n\n";
+}
+
+sub _start_table
+{
+    my( $self, @columns ) = @_;
+    $self->{table} = Text::ASCIITable->new;
+    $self->{table}->setOptions( 'drawRowLine', 1 );
+    $self->{table}->setCols( @columns );
 }
 
 1;
