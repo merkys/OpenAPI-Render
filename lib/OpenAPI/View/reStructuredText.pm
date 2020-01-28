@@ -3,7 +3,6 @@ package OpenAPI::View::reStructuredText;
 use strict;
 use warnings;
 
-use List::Util qw( max );
 use Text::ASCIITable;
 
 use parent qw(OpenAPI::View);
@@ -54,7 +53,7 @@ sub parameters_header
 {
     my( $self ) = @_;
     $self->_start_table( 'Name', 'Description', 'Mandatory?', 'Format', 'Example' );
-    return '';
+    return _h( 'Parameters', '+' );
 }
 
 sub parameter
@@ -85,7 +84,7 @@ sub responses_header
 {
     my( $self ) = @_;
     $self->_start_table( 'HTTP code', 'Description' );
-    return '';
+    return _h( 'Responses', '+' );
 }
 
 sub response
