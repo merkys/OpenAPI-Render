@@ -53,7 +53,7 @@ sub parameters_header
 {
     my( $self ) = @_;
     $self->_start_table( 'Name', 'Description', 'Mandatory?', 'Format', 'Example' );
-    return _h( 'Parameters', '+' );
+    return _h( 'Parameters', '~' );
 }
 
 sub parameter
@@ -84,7 +84,7 @@ sub responses_header
 {
     my( $self ) = @_;
     $self->_start_table( 'HTTP code', 'Description' );
-    return _h( 'Responses', '+' );
+    return _h( 'Responses', '~' );
 }
 
 sub response
