@@ -10,6 +10,54 @@ our @EXPORT_OK = qw(
     RequestBody2Parameters
 );
 
+sub new
+{
+    my( $class, $api ) = @_;
+
+    my $self = { api => dereference( $api, $api ) };
+
+    my( $base_url ) = map { $_->{url} } @{$api->{servers} };
+    $self->{base_url} = $base_url if $base_url;
+
+    return bless $self, $class;
+}
+
+sub show
+{
+    my( $self ) = @_;
+
+    print $self->header;
+
+    my $api = $self->{api};
+
+    for my $path (sort keys %{$api->{paths}}) {
+        print $self->path_header( $path );
+        for my $operation ('get', 'post', 'patch', 'put', 'delete') {
+            next if !$api->{paths}{$path}{$operation};
+            print $self->operation_header( $path, $operation );
+            my @parameters = (
+                exists $api->{paths}{$path}{parameters}
+                   ? @{$api->{paths}{$path}{parameters}} : (),
+                exists $api->{paths}{$path}{$operation}{parameters}
+                   ? @{$api->{paths}{$path}{$operation}{parameters}} : (),
+                exists $api->{paths}{$path}{$operation}{requestBody}
+                   ? RequestBody2Parameters( $api->{paths}{$path}{$operation}{requestBody} ) : (),
+                );
+            print map { $self->parameter( $_ ) } @parameters;
+            print $self->operation_footer( $path, $operation );
+        }
+    }
+
+    print $self->footer;
+}
+
+sub header {}
+sub footer {}
+sub path_header {}
+sub operation_header {}
+sub operation_footer {}
+sub parameter {}
+
 sub dereference
 {
     my( $node, $root ) = @_;

@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use CGI qw(:standard -nosticky -utf8 start_div end_div);
 use JSON;
-use OpenAPI::View qw(dereference RequestBody2Parameters);
+use OpenAPI::View::HTMLForms;
 
 my $filename = shift @ARGV;
 
@@ -13,97 +12,6 @@ open( my $inp, $filename );
 my $api = decode_json( join '', <$inp> );
 close $inp;
 
-$api = dereference( $api, $api );
+$api = OpenAPI::View::HTMLForms->new( $api );
 
-print header( -type => 'text/html',
-              -expires => 'now',
-              -charset => 'UTF-8' ),
-      start_html( -title => $api->{info}{title} . ' v' .
-                            $api->{info}{version},
-                  -script =>
-'
-
-function replace_url_parameters( form ) {
-    var url = form.getAttribute( "action" );
-    var inputs = form.getElementsByTagName( "input" );
-    for( var i = 0; i < inputs.length; i++ ) {
-        var data_in_path = inputs[i].getAttribute( "data-in-path" );
-        if( data_in_path ) {
-            url = url.replace( "{" + inputs[i].name + "}", inputs[i].value );
-            inputs[i].disabled = "disabled";
-        }
-    }
-    form.setAttribute( "action", url );
-}
-
-'               );
-
-my( $base_url ) = map { $_->{url} } @{$api->{servers} };
-
-for my $path (sort keys %{$api->{paths}}) {
-    print h1( $path );
-    for my $operation ('get', 'post', 'patch', 'put', 'delete') {
-        next if !$api->{paths}{$path}{$operation};
-        my @parameters = (
-            exists $api->{paths}{$path}{parameters}
-               ? @{$api->{paths}{$path}{parameters}} : (),
-            exists $api->{paths}{$path}{$operation}{parameters}
-               ? @{$api->{paths}{$path}{$operation}{parameters}} : (),
-            exists $api->{paths}{$path}{$operation}{requestBody}
-               ? RequestBody2Parameters( $api->{paths}{$path}{$operation}{requestBody} ) : (),
-            );
-        my @fields;
-        for my $parameter (@parameters) {
-            push @fields,
-                 h3( $parameter->{name} ),
-                 $parameter->{description} ? p( $parameter->{description} ) : ();
-            if( $parameter->{schema} && $parameter->{schema}{enum} ) {
-                my @values = @{$parameter->{schema}{enum}};
-                if( !$parameter->{required} ) {
-                    unshift @values, '';
-                }
-                push @fields,
-                     popup_menu( -name => $parameter->{name},
-                                 -values => \@values,
-                                 ($parameter->{in} eq 'path'
-                                    ? ( '-data-in-path' => 1 ) : ()) );
-            } elsif( ($parameter->{schema}{type} &&
-                      $parameter->{schema}{type} eq 'object') ||
-                     ($parameter->{schema}{format} &&
-                      $parameter->{schema}{format} eq 'binary') ) {
-                push @fields,
-                     filefield( -name => $parameter->{name} );
-            } else {
-                push @fields,
-                     input( { -type => 'text',
-                              -name => $parameter->{name},
-                              ($parameter->{in} eq 'path'
-                                ? ( '-data-in-path' => 1 ) : ()),
-                              (exists $parameter->{example}
-                                ? ( -placeholder => $parameter->{example} )
-                                : ()) } );
-            }
-        }
-        my %submit_options;
-        if( $operation eq 'get' || $operation eq 'post' ) {
-            $submit_options{-onclick} = 'replace_url_parameters( this.form )';
-        } else {
-            $submit_options{-name} =
-                sprintf 'Submit Query (cannot be handled for %s)',
-                        uc $operation;
-            $submit_options{-disabled} = 'disabled';
-        }
-        print start_form( -action => $base_url . $path,
-                          -method => $operation ),
-              fieldset(
-                legend( uc( $operation ) .
-                        ( $api->{paths}{$path}{$operation}{description}
-                             ? ': ' . $api->{paths}{$path}{$operation}{description} : '' ) ),
-                @fields,
-                submit( %submit_options ) ),
-              end_form;
-    }
-}
-
-print end_html,
-      "\n";
+$api->show;
