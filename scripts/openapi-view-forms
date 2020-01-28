@@ -9,9 +9,7 @@ use OpenAPI::View::HTMLForms;
 my $filename = shift @ARGV;
 
 open( my $inp, $filename );
-my $api = decode_json( join '', <$inp> );
+my $api = OpenAPI::View::HTMLForms->new( decode_json( join '', <$inp> ) );
 close $inp;
 
-$api = OpenAPI::View::HTMLForms->new( $api );
-
-$api->show;
+print $api->show, "\n";

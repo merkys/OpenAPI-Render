@@ -26,15 +26,15 @@ sub show
 {
     my( $self ) = @_;
 
-    print $self->header;
+    my $html = $self->header;
 
     my $api = $self->{api};
 
     for my $path (sort keys %{$api->{paths}}) {
-        print $self->path_header( $path );
+        $html .= $self->path_header( $path );
         for my $operation ('get', 'post', 'patch', 'put', 'delete') {
             next if !$api->{paths}{$path}{$operation};
-            print $self->operation_header( $path, $operation );
+            $html .= $self->operation_header( $path, $operation );
             my @parameters = (
                 exists $api->{paths}{$path}{parameters}
                    ? @{$api->{paths}{$path}{parameters}} : (),
@@ -43,12 +43,13 @@ sub show
                 exists $api->{paths}{$path}{$operation}{requestBody}
                    ? RequestBody2Parameters( $api->{paths}{$path}{$operation}{requestBody} ) : (),
                 );
-            print map { $self->parameter( $_ ) } @parameters;
-            print $self->operation_footer( $path, $operation );
+            $html .= join '', map { $self->parameter( $_ ) } @parameters;
+            $html .= $self->operation_footer( $path, $operation );
         }
     }
 
-    print $self->footer;
+    $html .= $self->footer;
+    return $html;
 }
 
 sub header {}
