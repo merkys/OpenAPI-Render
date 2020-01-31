@@ -4,11 +4,11 @@ use strict;
 use warnings;
 
 use JSON;
-use OpenAPI::View::HTMLForms;
+use OpenAPI::Render::HTMLForms;
 use Test::More tests => 1;
 
 open( my $inp, 't/restful-api.json' );
-my $api = OpenAPI::View::HTMLForms->new( decode_json( join '', <$inp> ) );
+my $api = OpenAPI::Render::HTMLForms->new( decode_json( join '', <$inp> ) );
 close $inp;
 
 is( $api->show . "\n", <<END, 'HTML forms generation works' );

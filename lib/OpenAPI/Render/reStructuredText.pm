@@ -1,11 +1,11 @@
-package OpenAPI::View::reStructuredText;
+package OpenAPI::Render::reStructuredText;
 
 use strict;
 use warnings;
 
 use Text::ASCIITable;
 
-use parent qw(OpenAPI::View);
+use parent qw(OpenAPI::Render);
 
 sub header
 {

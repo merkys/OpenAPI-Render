@@ -1,4 +1,4 @@
-package OpenAPI::View;
+package OpenAPI::Render;
 
 use strict;
 use warnings;
