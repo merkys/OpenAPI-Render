@@ -7,7 +7,7 @@ use JSON;
 use OpenAPI::Render::HTMLForms;
 use Test::More tests => 1;
 
-open( my $inp, 't/restful-api.json' );
+open( my $inp, 't/RestfulDB-API.json' );
 my $api = OpenAPI::Render::HTMLForms->new( decode_json( join '', <$inp> ) );
 close $inp;
 
