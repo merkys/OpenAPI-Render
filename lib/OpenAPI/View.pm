@@ -111,11 +111,16 @@ sub RequestBody2Parameters
     my $schema = $requestBody->{content}{'multipart/form-data'}{schema};
 
     return if $schema->{type} ne 'object';
-    return map { {
-                    in     => 'query',
-                    name   => $_,
-                    schema => $schema->{properties}{$_} } }
-               sort keys %{$schema->{properties}};
+    return ( map { {
+                      in     => 'query',
+                      name   => $_,
+                      schema => $schema->{properties}{$_} } }
+                 sort keys %{$schema->{properties}} ),
+           ( map { {
+                      in     => 'query',
+                      name   => $_,
+                      schema => $schema->{patternProperties}{$_} } }
+                 sort keys %{$schema->{patternProperties}} );
 }
 
 1;
