@@ -74,6 +74,8 @@ sub parameter
 {
     my( $self, $parameter ) = @_;
     my @parameter;
+    return @parameter if $parameter->{_is_pattern};
+
     push @parameter,
          h3( $parameter->{name} ),
          $parameter->{description} ? p( $parameter->{description} ) : ();
