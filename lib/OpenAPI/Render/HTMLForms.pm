@@ -3,6 +3,8 @@ package OpenAPI::Render::HTMLForms;
 use strict;
 use warnings;
 
+# VERSION
+
 use CGI qw(-nosticky -utf8 h1 h2 h3 p input filefield popup_menu legend submit start_div end_div start_fieldset end_fieldset start_form end_form start_html end_html);
 
 use parent qw(OpenAPI::Render);

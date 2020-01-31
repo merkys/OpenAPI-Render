@@ -3,6 +3,9 @@ package OpenAPI::Render;
 use strict;
 use warnings;
 
+# ABSTRACT: Render OpenAPI specifications as documents
+# VERSION
+
 sub new
 {
     my( $class, $api ) = @_;

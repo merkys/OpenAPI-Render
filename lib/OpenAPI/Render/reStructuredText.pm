@@ -3,6 +3,8 @@ package OpenAPI::Render::reStructuredText;
 use strict;
 use warnings;
 
+# VERSION
+
 use Text::ASCIITable;
 
 use parent qw(OpenAPI::Render);
