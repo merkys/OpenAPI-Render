@@ -105,7 +105,9 @@ sub parameter
                         ? ( '-data-in-path' => 1 ) : ()),
                       (exists $parameter->{example}
                         ? ( -placeholder => $parameter->{example} )
-                        : ()) } );
+                        : ()),
+                      ($parameter->{in} eq 'path' || $parameter->{required}
+                        ? ( -required => 'required' ) : ()) } );
     }
     return @parameter;
 }

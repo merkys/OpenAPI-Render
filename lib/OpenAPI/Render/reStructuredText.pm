@@ -29,11 +29,10 @@ sub path_header
     }
     if( @url_parameters ) {
         $text .= _h( 'URL parameters', '+' );
-        $self->_start_table( 'Name', 'Description', 'Format', 'Example' );
+        $self->_start_table( 'Name', 'Description', 'Example' );
         foreach (@url_parameters) {
             $self->{table}->addRow( $_->{name},
                                     $_->{description},
-                                    $_->{format},
                                     $_->{example} );
         }
         $text .= $self->parameters_footer;
