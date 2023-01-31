@@ -29,7 +29,7 @@ sub new
         $api = decode_json $api;
     }
 
-    my $self = { api => dereference( $api, $api ) };
+    my $self = { api => _dereference( $api, $api ) };
 
     if( exists $self->{api}{openapi} ) {
         my $version = version->parse( $self->{api}{openapi} );
@@ -123,12 +123,12 @@ sub api
     return $self->{api};
 }
 
-sub dereference
+sub _dereference
 {
     my( $node, $root ) = @_;
 
     if( ref $node eq 'ARRAY' ) {
-        @$node = map { dereference( $_, $root ) } @$node;
+        @$node = map { _dereference( $_, $root ) } @$node;
     } elsif( ref $node eq 'HASH' ) {
         my @keys = keys %$node;
         if( scalar @keys == 1 && $keys[0] eq '$ref' ) {
@@ -139,7 +139,7 @@ sub dereference
                 $node = $node->{shift @path};
             }
         } else {
-            %$node = map { $_ => dereference( $node->{$_}, $root ) } @keys;
+            %$node = map { $_ => _dereference( $node->{$_}, $root ) } @keys;
         }
     }
     return $node;
