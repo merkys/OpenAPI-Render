@@ -53,8 +53,7 @@ sub show
     my( $self ) = @_;
 
     my $html = $self->header;
-
-    my $api = $self->{api};
+    my $api = $self->api;
 
     for my $path (sort keys %{$api->{paths}}) {
         $html .= $self->path_header( $path );
@@ -103,6 +102,19 @@ sub response { return '' };
 sub responses_footer { return '' };
 
 sub operation_footer { return '' }
+
+=method C<api>
+
+Returns the parsed and dereferenced input OpenAPI specification.
+Note that in the returned data structure all references are dereferenced, i.e., flat.
+
+=cut
+
+sub api
+{
+    my( $self ) = @_;
+    return $self->{api};
+}
 
 sub dereference
 {
