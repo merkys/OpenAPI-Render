@@ -10,6 +10,16 @@ use version;
 # ABSTRACT: Render OpenAPI specifications as documents
 # VERSION
 
+=head1 DESCRIPTION
+
+C<OpenAPI::Render> is a class meant to be subclassed and used to render OpenAPI specifications.
+Currently OpenAPI version 3.0.2 is the target version, but in principle all 3.* versions should work.
+C<OpenAPI::Render> provides methods for representing OpenAPI definitions such as operations and parameters, and the base class performs the required traversal.
+Thus it should be enough to subclass it and override the appropriate methods.
+For examples see L<OpenAPI::Render::HTMLForms> and L<OpenAPI::Render::reStructuredText>.
+
+=cut
+
 =method C<new>
 
 Given an OpenAPI specification in raw JSON or parsed data structure, constructs a C<OpenAPI::Render> object.
