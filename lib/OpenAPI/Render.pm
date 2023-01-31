@@ -9,6 +9,12 @@ use JSON qw( decode_json );
 # ABSTRACT: Render OpenAPI specifications as documents
 # VERSION
 
+=method C<new>
+
+Given an OpenAPI specification in raw JSON or parsed data structure, constructs a C<OpenAPI::Render> object.
+
+=cut
+
 sub new
 {
     my( $class, $api ) = @_;
@@ -34,6 +40,13 @@ sub new
 
     return bless $self, $class;
 }
+
+=method C<show>
+
+Main generating method (does not take any parameters).
+Returns a string with rendered representation of an OpenAPI specification.
+
+=cut
 
 sub show
 {
