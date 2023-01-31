@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use version;
+use JSON qw( decode_json );
 
 # ABSTRACT: Render OpenAPI specifications as documents
 # VERSION
@@ -11,6 +12,9 @@ use version;
 sub new
 {
     my( $class, $api ) = @_;
+
+    # Parse JSON string if received
+    $api = decode_json( $api ) if ref $api eq '';
 
     my $self = { api => dereference( $api, $api ) };
 
