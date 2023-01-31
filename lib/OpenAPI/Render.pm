@@ -95,18 +95,102 @@ sub show
     return $html;
 }
 
+=method C<header>
+
+Text added before everything else.
+Empty in the base class.
+
+=cut
+
 sub header { return '' }
+
+=method C<footer>
+
+Text added after everything else.
+Empty in the base class.
+
+=cut
+
 sub footer { return '' }
+
+=method C<path_header>
+
+Text added before each path.
+Empty in the base class.
+
+=cut
+
 sub path_header { return '' }
+
+=method C<operation_header>
+
+Text added before each operation.
+Empty in the base class.
+
+=cut
+
 sub operation_header { return '' }
 
+=method C<parameters_header>
+
+Text added before parameters list.
+Empty in the base class.
+
+=cut
+
 sub parameters_header { return '' };
+
+=method C<parameter>
+
+Returns representation of a single parameter.
+Empty in the base class.
+
+=cut
+
 sub parameter { return '' }
+
+=method C<parameters_footer>
+
+Text added after parameters list.
+Empty in the base class.
+
+=cut
+
 sub parameters_footer { return '' };
 
+=method C<responses_header>
+
+Text added before responses list.
+Empty in the base class.
+
+=cut
+
 sub responses_header { return '' };
+
+=method C<parameter>
+
+Returns representation of a single response.
+Empty in the base class.
+
+=cut
+
 sub response { return '' };
+
+=method C<responses_footer>
+
+Text added after responses list.
+Empty in the base class.
+
+=cut
+
 sub responses_footer { return '' };
+
+=method C<operation_footer>
+
+Text added after each operation.
+Empty in the base class.
+
+=cut
 
 sub operation_footer { return '' }
 
