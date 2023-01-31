@@ -72,7 +72,7 @@ sub show
                 exists $api->{paths}{$path}{$operation}{parameters}
                    ? @{$api->{paths}{$path}{$operation}{parameters}} : (),
                 exists $api->{paths}{$path}{$operation}{requestBody}
-                   ? RequestBody2Parameters( $api->{paths}{$path}{$operation}{requestBody} ) : (),
+                   ? _RequestBody2Parameters( $api->{paths}{$path}{$operation}{requestBody} ) : (),
                 );
             my $responses = $api->{paths}{$path}{$operation}{responses};
 
@@ -229,7 +229,7 @@ sub _dereference
     return $node;
 }
 
-sub RequestBody2Parameters
+sub _RequestBody2Parameters
 {
     my( $requestBody ) = @_;
 
