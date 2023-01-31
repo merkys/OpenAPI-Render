@@ -3,11 +3,13 @@ package OpenAPI::Render::HTMLForms;
 use strict;
 use warnings;
 
+# ABSTRACT: Generate HTML forms for OpenAPI specifications.
 # VERSION
 
-use CGI qw(-nosticky -utf8 h1 h2 h3 p input filefield popup_menu legend submit start_div end_div start_fieldset end_fieldset start_form end_form start_html end_html);
+use OpenAPI::Render;
+use parent OpenAPI::Render::;
 
-use parent qw(OpenAPI::Render);
+use CGI qw(-nosticky -utf8 h1 h2 h3 p input filefield popup_menu legend submit start_div end_div start_fieldset end_fieldset start_form end_form start_html end_html);
 
 sub header
 {

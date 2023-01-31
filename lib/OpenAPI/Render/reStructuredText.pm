@@ -3,11 +3,13 @@ package OpenAPI::Render::reStructuredText;
 use strict;
 use warnings;
 
+# ABSTRACT: Generate reStructuredText (RST) documents for OpenAPI specifications.
 # VERSION
 
-use Text::ASCIITable;
+use OpenAPI::Render;
+use parent OpenAPI::Render::;
 
-use parent qw(OpenAPI::Render);
+use Text::ASCIITable;
 
 sub header
 {
