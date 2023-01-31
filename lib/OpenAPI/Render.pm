@@ -3,6 +3,8 @@ package OpenAPI::Render;
 use strict;
 use warnings;
 
+use version;
+
 # ABSTRACT: Render OpenAPI specifications as documents
 # VERSION
 
@@ -11,6 +13,17 @@ sub new
     my( $class, $api ) = @_;
 
     my $self = { api => dereference( $api, $api ) };
+
+    if( exists $self->{api}{openapi} ) {
+        my $version = version->parse( $self->{api}{openapi} );
+        if( $version < version->parse( '3' ) || $version > version->parse( '4' ) ) {
+            warn "unsupported OpenAPI version $self->{api}{openapi}, " .
+                 'results may be incorrect', "\n";
+        }
+    } else {
+        warn 'top-level attribute "openapi" not found, cannot ensure ' .
+             'this is OpenAPI, cannot check version', "\n";
+    }
 
     my( $base_url ) = map { $_->{url} } @{$api->{servers} };
     $self->{base_url} = $base_url if $base_url;
