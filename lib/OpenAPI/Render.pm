@@ -3,8 +3,9 @@ package OpenAPI::Render;
 use strict;
 use warnings;
 
-use version;
+use Clone qw( clone );
 use JSON qw( decode_json );
+use version;
 
 # ABSTRACT: Render OpenAPI specifications as documents
 # VERSION
@@ -12,6 +13,7 @@ use JSON qw( decode_json );
 =method C<new>
 
 Given an OpenAPI specification in raw JSON or parsed data structure, constructs a C<OpenAPI::Render> object.
+Does not modify input values.
 
 =cut
 
@@ -19,8 +21,13 @@ sub new
 {
     my( $class, $api ) = @_;
 
-    # Parse JSON string if received
-    $api = decode_json( $api ) if ref $api eq '';
+    if( ref $api ) {
+        # Parsed JSON given, need to make a copy as dereferencing will modify it.
+        $api = clone $api;
+    } else {
+        # Raw JSON given, need to parse.
+        $api = decode_json $api;
+    }
 
     my $self = { api => dereference( $api, $api ) };
 
