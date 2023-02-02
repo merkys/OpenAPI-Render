@@ -20,7 +20,7 @@ For examples see L<OpenAPI::Render::HTMLForms> and L<OpenAPI::Render::reStructur
 
 =head1 MAIN METHODS
 
-=method C<new>
+=head2 C<new( $openapi )>
 
 Given an OpenAPI specification in raw JSON or parsed data structure, constructs a C<OpenAPI::Render> object.
 Does not modify input values.
@@ -58,7 +58,7 @@ sub new
     return bless $self, $class;
 }
 
-=method C<show>
+=head2 C<show()>
 
 Main generating method (does not take any parameters).
 Returns a string with rendered representation of an OpenAPI specification.
@@ -98,7 +98,9 @@ sub show
     return $html;
 }
 
-=method C<header>
+=head1 RENDERING METHODS
+
+=head2 C<header()>
 
 Text added before everything else.
 Empty in the base class.
@@ -107,7 +109,7 @@ Empty in the base class.
 
 sub header { return '' }
 
-=method C<footer>
+=head2 C<footer()>
 
 Text added after everything else.
 Empty in the base class.
@@ -116,7 +118,7 @@ Empty in the base class.
 
 sub footer { return '' }
 
-=method C<path_header>
+=head2 C<path_header( $path )>
 
 Text added before each path.
 Empty in the base class.
@@ -125,7 +127,7 @@ Empty in the base class.
 
 sub path_header { return '' }
 
-=method C<operation_header>
+=head2 C<operation_header( $path, $operation )>
 
 Text added before each operation.
 Empty in the base class.
@@ -134,7 +136,7 @@ Empty in the base class.
 
 sub operation_header { return '' }
 
-=method C<parameters_header>
+=head2 C<parameters_header()>
 
 Text added before parameters list.
 Empty in the base class.
@@ -143,7 +145,7 @@ Empty in the base class.
 
 sub parameters_header { return '' };
 
-=method C<parameter>
+=head2 C<parameter( $parameter )>
 
 Returns representation of a single parameter.
 Empty in the base class.
@@ -152,7 +154,7 @@ Empty in the base class.
 
 sub parameter { return '' }
 
-=method C<parameters_footer>
+=head2 C<parameters_footer()>
 
 Text added after parameters list.
 Empty in the base class.
@@ -161,7 +163,7 @@ Empty in the base class.
 
 sub parameters_footer { return '' };
 
-=method C<responses_header>
+=head2 C<responses_header()>
 
 Text added before responses list.
 Empty in the base class.
@@ -170,7 +172,7 @@ Empty in the base class.
 
 sub responses_header { return '' };
 
-=method C<parameter>
+=head2 C<response( $response )>
 
 Returns representation of a single response.
 Empty in the base class.
@@ -179,7 +181,7 @@ Empty in the base class.
 
 sub response { return '' };
 
-=method C<responses_footer>
+=head2 C<responses_footer()>
 
 Text added after responses list.
 Empty in the base class.
@@ -188,7 +190,7 @@ Empty in the base class.
 
 sub responses_footer { return '' };
 
-=method C<operation_footer>
+=head2 C<operation_footer( $path, $operation )>
 
 Text added after each operation.
 Empty in the base class.
