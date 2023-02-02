@@ -72,7 +72,9 @@ sub operation_footer
 
     my %submit_options;
     if( $operation eq 'get' || $operation eq 'post' ) {
-        $submit_options{-onclick} = 'replace_url_parameters( this.form )';
+        if( any { $_->{in} eq 'path' } $self->parameters( $path, $operation ) ) {
+            $submit_options{-onclick} = 'replace_url_parameters( this.form )';
+        }
     } else {
         $submit_options{-name} =
             sprintf 'Submit Query (cannot be handled for %s)',
