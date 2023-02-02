@@ -18,7 +18,7 @@ C<OpenAPI::Render> provides methods for representing OpenAPI definitions such as
 Thus it should be enough to subclass it and override the appropriate methods.
 For examples see L<OpenAPI::Render::HTMLForms> and L<OpenAPI::Render::reStructuredText>.
 
-=cut
+=head1 MAIN METHODS
 
 =method C<new>
 
@@ -76,14 +76,7 @@ sub show
         $html .= $self->path_header( $path );
         for my $operation ('get', 'post', 'patch', 'put', 'delete') {
             next if !$api->{paths}{$path}{$operation};
-            my @parameters = (
-                exists $api->{paths}{$path}{parameters}
-                   ? @{$api->{paths}{$path}{parameters}} : (),
-                exists $api->{paths}{$path}{$operation}{parameters}
-                   ? @{$api->{paths}{$path}{$operation}{parameters}} : (),
-                exists $api->{paths}{$path}{$operation}{requestBody}
-                   ? _RequestBody2Parameters( $api->{paths}{$path}{$operation}{requestBody} ) : (),
-                );
+            my @parameters = $self->parameters( $path, $operation );
             my $responses = $api->{paths}{$path}{$operation}{responses};
 
             $html .= $self->operation_header( $path, $operation ) .
@@ -204,7 +197,9 @@ Empty in the base class.
 
 sub operation_footer { return '' }
 
-=method C<api>
+=head1 HELPER METHODS
+
+=head2 C<api()>
 
 Returns the parsed and dereferenced input OpenAPI specification.
 Note that in the returned data structure all references are dereferenced, i.e., flat.
@@ -215,6 +210,44 @@ sub api
 {
     my( $self ) = @_;
     return $self->{api};
+}
+
+=head2 C<parameters( $path, $operation )>
+
+Returns the list of parameters.
+Optionally, path and operation can be given to filter the parameters.
+
+=cut
+
+sub parameters
+{
+    my( $self, $path_filter, $operation_filter ) = @_;
+
+    my $api = $self->api;
+
+    my @parameters;
+    for my $path (sort keys %{$api->{paths}}) {
+        next if $path_filter && $path ne $path_filter;
+        for my $operation ('get', 'post', 'patch', 'put', 'delete') {
+            next if $operation_filter && $operation ne $operation_filter;
+            next if !$api->{paths}{$path}{$operation};
+
+            if( exists $api->{paths}{$path}{parameters} ) {
+                push @parameters, @{$api->{paths}{$path}{parameters}};
+            }
+
+            if( exists $api->{paths}{$path}{$operation}{parameters} ) {
+                push @parameters, @{$api->{paths}{$path}{$operation}{parameters}};
+            }
+
+            if( exists $api->{paths}{$path}{$operation}{requestBody} ) {
+                push @parameters,
+                     _RequestBody2Parameters( $api->{paths}{$path}{$operation}{requestBody} );
+            }
+        }
+    }
+
+    return @parameters;
 }
 
 sub _dereference
