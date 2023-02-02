@@ -62,8 +62,8 @@ sub operation_header
                        -method => $operation ) .
            start_fieldset .
            legend( uc( $operation ) .
-                   ( $self->{api}{paths}{$path}{$operation}{description}
-                        ? ': ' . $self->{api}{paths}{$path}{$operation}{description} : '' ) );
+                   ( $self->api->{paths}{$path}{$operation}{description}
+                        ? ': ' . $self->api->{paths}{$path}{$operation}{description} : '' ) );
 }
 
 sub operation_footer
