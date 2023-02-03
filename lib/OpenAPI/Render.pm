@@ -218,6 +218,7 @@ sub api
 
 Returns the list of parameters.
 Optionally, path and operation can be given to filter the parameters.
+Note that object-typed schemas from C<multipart/form-data> are translated to parameters too.
 
 =cut
 
